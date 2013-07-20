@@ -17,23 +17,14 @@ namespace APGE
 
       ~ResourceManager()
       {
-        //Handle cleanup of all handlers
-        std::map<const ResourceHandlerID, IResourceHandler*>::iterator iter;
-        iter = handlers_.begin();
-
-        while(iter != handlers_.end())
-          {
-            delete (iter->second);
-            handlers_.erase(iter++);
-          }
       }
 
       /**
-       * @brief registerHandler - Register a handler. This object will take UNIQUE ownership of the handler and handle deletion!
-       * @param handler - Should be a handler created with new [I.e. registerHandler(new(std::nothrow) SomeHandler);]
+       * @brief registerHandler
+       * @param handler
        * @return true if handler was registered without error
        */
-      bool registerHandler(IResourceHandler* handler)
+      bool registerHandler(std::shared_ptr<IResourceHandler> handler)
       {
         if(handler == 0)
           {
@@ -43,7 +34,7 @@ namespace APGE
         ResourceHandlerID handlerID = handler->getHandlerID();
 
         //Check to see if resource handler is already registered
-        std::map<const ResourceHandlerID, IResourceHandler*>::const_iterator iter;
+        std::map<const ResourceHandlerID, std::shared_ptr<IResourceHandler>>::const_iterator iter;
         iter = handlers_.find(handlerID);
         if(iter != handlers_.end())
           {
@@ -52,46 +43,45 @@ namespace APGE
           }
 
         //Add the handler
-        handlers_.insert( std::pair<const ResourceHandlerID, IResourceHandler*>(
+        handlers_.insert(std::pair<const ResourceHandlerID,std::shared_ptr<IResourceHandler>>(
                            handlerID,handler ));
         return true;
       }
 
       /**
-       * @brief getResourceHandler - Get a reference to the handler. Note: This reference will not expire until this object is destroyed.
+       * @brief getResourceHandler - Get a shared_pointer to the handler.
        * @param handlerID - Unique Handler ID of the resource handler.
-       * @return a reference to the resource handler.
+       * @return a shared_pointer to the resource handler.
        */
-      IResourceHandler& getResourceHandler(const ResourceHandlerID handlerID) const
+      std::shared_ptr<IResourceHandler> getResourceHandler(const ResourceHandlerID handlerID) const
       {
         //Find the handler
-        std::map<const ResourceHandlerID, IResourceHandler*>::const_iterator iter;
+        std::map<const ResourceHandlerID, std::shared_ptr<IResourceHandler> >::const_iterator iter;
         iter = handlers_.find(handlerID);
 
         //Return a reference if handler found. Fatal error if not.
         assert((iter != handlers_.end()) && "ResourceManager::registerHandler() - Handler not registered!");
-        return *(iter->second);
+        return (iter->second);
       }
 
 
       /**
-       * @brief getResourceHandler - Get a reference to the handler. Note: This reference will not expire until this object is destroyed.
-       * @return a reference to the resource handler.
+       * @brief getResourceHandler - Get a shared_pointer to the handler.
+       * @return a shared_pointer to the resource handler.
        */
-      template<class T> TResourceHandler<T>& getResourceHandler() const
+      template<class T> std::shared_ptr<TResourceHandler<T>> getResourceHandler() const
       {
         //Find the handler
-        std::map<const ResourceHandlerID, IResourceHandler*>::const_iterator iter;
+        std::map<const ResourceHandlerID, std::shared_ptr<IResourceHandler> >::const_iterator iter;
         iter = handlers_.find(typeid(T).name());
 
         //Return a reference if handler found. Fatal error if not.
         assert((iter != handlers_.end()) && "ResourceManager::registerHandler() - Handler not registered!");
-
-        return *(static_cast<TResourceHandler<T>*>(iter->second));
+        return std::static_pointer_cast<TResourceHandler<T>>(iter->second);
       }
 
     private:
-      std::map<const ResourceHandlerID, IResourceHandler*> handlers_;
+      std::map<const ResourceHandlerID, std::shared_ptr<IResourceHandler> > handlers_;
 
 
     };

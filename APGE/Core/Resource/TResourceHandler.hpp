@@ -11,10 +11,12 @@ namespace APGE
   {
     template<class T>
     /**
-     * @brief The TResourceHandler class should be extended by a new class for each resource type one wishes to handle.
-     * Each child class should pass a shared_ptr<T> to the dummy resource to use (E.g. error texture)
-     * This class only maintains weak references to resources, so resources are freed when no longer in use.
-     * To ensure resources persist through a level or the application lifetime, keep a list of loaded resources elsewhere (e.g. in level).
+     * @brief The TResourceHandler class should be extended by a new class for
+     * each resource type one wishes to handle. Each child class should pass
+     * a shared_ptr<T> to the dummy resource to use (E.g. error texture)
+     * This class only maintains weak references to resources, so resources are
+     * freed when no longer in use. To ensure resources persist through a level
+     * or the application lifetime, keep a list of loaded resources elsewhere (e.g. in level).
      */
     class TResourceHandler : public IResourceHandler
     {
@@ -44,11 +46,13 @@ namespace APGE
        */
       virtual std::string getResourceFilename(const ResourceID resourceID) const
       {
-        typename std::map<ResourceID, ResourceControlBlock>::const_iterator iter = resources_.find(resourceID);
+        typename std::map<ResourceID, ResourceControlBlock>::const_iterator iter;
+        iter = resources_.find(resourceID);
 
         if(iter == resources_.end())
           {
-            LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResourceFilename("<<resourceID<<") - Invalid ID");
+            LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResourceFilename("
+                 <<resourceID<<") - Invalid ID");
             return "";
           }
         return iter->second.fileName;
@@ -61,11 +65,13 @@ namespace APGE
        */
       virtual ResourceLoadMethod getResourceLoadMethod(const ResourceID resourceID) const
       {
-        typename std::map<ResourceID, ResourceControlBlock>::const_iterator iter = resources_.find(resourceID);
+        typename std::map<ResourceID, ResourceControlBlock>::const_iterator iter;
+        iter = resources_.find(resourceID);
 
         if(iter == resources_.end())
           {
-            LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResourceLoadMethod("<<resourceID<<") - Invalid ID");
+            LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResourceLoadMethod("
+                 <<resourceID<<") - Invalid ID");
             return ResourceLoadMethodUndefined;
           }
         return iter->second.loadMethod;
@@ -78,11 +84,13 @@ namespace APGE
        */
       virtual IResourceFromMemoryData getResourceMemoryData(const ResourceID resourceID) const
       {
-        typename std::map<ResourceID, ResourceControlBlock>::const_iterator iter = resources_.find(resourceID);
+        typename std::map<ResourceID, ResourceControlBlock>::const_iterator iter;
+        iter = resources_.find(resourceID);
 
         if(iter == resources_.end())
           {
-            LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResourceMemoryData("<<resourceID<<") - Invalid ID");
+            LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResourceMemoryData("
+                 <<resourceID<<") - Invalid ID");
             return IResourceFromMemoryData();
           }
         return iter->second.memoryData;
@@ -95,11 +103,13 @@ namespace APGE
        */
       virtual IResourceFromStreamData getResourceStreamData(const ResourceID resourceID) const
       {
-        typename std::map<ResourceID, ResourceControlBlock>::const_iterator iter = resources_.find(resourceID);
+        typename std::map<ResourceID, ResourceControlBlock>::const_iterator iter;
+        iter = resources_.find(resourceID);
 
         if(iter == resources_.end())
           {
-            LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResourceStreamData("<<resourceID<<") - Invalid ID");
+            LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResourceStreamData("
+                 <<resourceID<<") - Invalid ID");
             return IResourceFromStreamData();
           }
         return iter->second.streamData;
@@ -112,7 +122,8 @@ namespace APGE
        */
       virtual void setResourceFilename(const ResourceID resourceID, std::string filename)
       {
-        typename std::map<ResourceID, ResourceControlBlock>::iterator iter = resources_.find(resourceID);
+        typename std::map<ResourceID, ResourceControlBlock>::iterator iter;
+        iter = resources_.find(resourceID);
 
         if(iter == resources_.end())
           {
@@ -130,11 +141,13 @@ namespace APGE
        */
       virtual void setResourceMemoryData(const ResourceID resourceID, IResourceFromMemoryData memoryData)
       {
-        typename std::map<ResourceID, ResourceControlBlock>::iterator iter = resources_.find(resourceID);
+        typename std::map<ResourceID, ResourceControlBlock>::iterator iter;
+        iter = resources_.find(resourceID);
 
         if(iter == resources_.end())
           {
-            LOGE("TResourceHandler<"<<typeid(T).name()<<">::setResourceMemoryData("<<resourceID<<",<MEMDATA>) - Invalid ID");
+            LOGE("TResourceHandler<"<<typeid(T).name()<<">::setResourceMemoryData("
+                 <<resourceID<<",<MEMDATA>) - Invalid ID");
             return;
           }
         iter->second.loadMethod = ResourceLoadMethodMemory;
@@ -148,11 +161,13 @@ namespace APGE
        */
       virtual void setResourceStreamData(const ResourceID resourceID, IResourceFromStreamData streamData)
       {
-        typename std::map<ResourceID, ResourceControlBlock>::iterator iter = resources_.find(resourceID);
+        typename std::map<ResourceID, ResourceControlBlock>::iterator iter;
+        iter = resources_.find(resourceID);
 
         if(iter == resources_.end())
           {
-            LOGE("TResourceHandler<"<<typeid(T).name()<<">::setResourceMemoryData("<<resourceID<<",<STREAMDATA>) - Invalid ID");
+            LOGE("TResourceHandler<"<<typeid(T).name()<<">::setResourceMemoryData("
+                 <<resourceID<<",<STREAMDATA>) - Invalid ID");
             return;
           }
         iter->second.loadMethod = ResourceLoadMethodStream;
@@ -167,14 +182,18 @@ namespace APGE
        */
       virtual void removeResource(const ResourceID resourceID)
       {
-        typename std::map<ResourceID, ResourceControlBlock>::iterator iter = resources_.find(resourceID);
+        typename std::map<ResourceID, ResourceControlBlock>::iterator iter;
+        iter = resources_.find(resourceID);
 
         if(iter == resources_.end())
           {
-            LOGE("TResourceHandler<"<<typeid(T).name()<<">::removeResource("<<resourceID<<") - Invalid ID");
-            return;
+            LOGE("TResourceHandler<"<<typeid(T).name()<<">::removeResource("
+                 <<resourceID<<") - Invalid ID");
           }
-        resources_.erase(iter++);
+        else
+          {
+            resources_.erase(iter++);
+          }
       }
 
       /**
@@ -184,8 +203,8 @@ namespace APGE
        */
       virtual void removeAllResources()
       {
-        typename std::map<ResourceID, ResourceControlBlock>::iterator iter = resources_.begin();
-
+        typename std::map<ResourceID, ResourceControlBlock>::iterator iter;
+        iter = resources_.begin();
         while(iter != resources_.end())
           {
             resources_.erase(iter++);
@@ -199,7 +218,8 @@ namespace APGE
        */
       virtual bool isLoaded(const ResourceID resourceID) const
       {
-        typename std::map<ResourceID, ResourceControlBlock>::const_iterator iter = resources_.find(resourceID);
+        typename std::map<ResourceID, ResourceControlBlock>::const_iterator iter;
+        iter = resources_.find(resourceID);
         if(iter == resources_.end())
           {
             LOGE("TResourceHandler<"<<typeid(T).name()<<">::isLoaded("<<resourceID<<") - Invalid ID");
@@ -215,8 +235,7 @@ namespace APGE
        */
       virtual bool isResource(const ResourceID resourceID) const
       {
-        typename std::map<ResourceID, ResourceControlBlock>::const_iterator iter = resources_.find(resourceID);
-        return iter != resources_.end();
+        return resources_.find(resourceID) != resources_.end();
       }
 
       /**
@@ -224,14 +243,17 @@ namespace APGE
        * @param resourceID
        * @param filename
        */
-      void addResource(const ResourceID resourceID, std::string filename)
+      virtual void addResource(const ResourceID resourceID, std::string filename)
       {
-        typename std::map<ResourceID, ResourceControlBlock>::iterator iter = resources_.find(resourceID);
+        typename std::map<ResourceID, ResourceControlBlock>::iterator iter;
+        iter = resources_.find(resourceID);
         if(iter != resources_.end())
           {
-            LOGE("TResourceHandler<"<<typeid(T).name()<<">::addResource("<<resourceID<<","<<filename<<") - ID Already is already in use!");
+            LOGE("TResourceHandler<"<<typeid(T).name()<<">::addResource("
+                 <<resourceID<<","<<filename<<") - ID Already is already in use!");
             return;
           }
+
         ResourceControlBlock rcb;
         rcb.loadMethod = ResourceLoadMethodFile;
         rcb.fileName = filename;
@@ -243,14 +265,17 @@ namespace APGE
        * @param resourceID
        * @param memory
        */
-      void addResource(const ResourceID resourceID, IResourceFromMemoryData memory)
+      virtual void addResource(const ResourceID resourceID, IResourceFromMemoryData memory)
       {
-        typename std::map<ResourceID, ResourceControlBlock>::iterator iter = resources_.find(resourceID);
+        typename std::map<ResourceID, ResourceControlBlock>::iterator iter;
+        iter = resources_.find(resourceID);
         if(iter != resources_.end())
           {
-            LOGE("TResourceHandler<"<<typeid(T).name()<<">::addResource("<<resourceID<<",<MEMDATA>) - ID Already is already in use!");
+            LOGE("TResourceHandler<"<<typeid(T).name()<<">::addResource("
+                 <<resourceID<<",<MEMDATA>) - ID Already is already in use!");
             return;
           }
+
         ResourceControlBlock rcb;
         rcb.loadMethod = ResourceLoadMethodMemory;
         rcb.memoryData = memory;
@@ -262,14 +287,17 @@ namespace APGE
        * @param resourceID
        * @param stream
        */
-      void addResource(const ResourceID resourceID, IResourceFromStreamData stream)
+      virtual void addResource(const ResourceID resourceID, IResourceFromStreamData stream)
       {
-        typename std::map<ResourceID, ResourceControlBlock>::iterator iter = resources_.find(resourceID);
+        typename std::map<ResourceID, ResourceControlBlock>::iterator iter;
+        iter = resources_.find(resourceID);
         if(iter != resources_.end())
           {
-            LOGE("TResourceHandler<"<<typeid(T).name()<<">::addResource("<<resourceID<<",<STREAMDATA>) - ID Already is already in use!");
+            LOGE("TResourceHandler<"<<typeid(T).name()<<">::addResource("
+                 <<resourceID<<",<STREAMDATA>) - ID Already is already in use!");
             return;
           }
+
         ResourceControlBlock rcb;
         rcb.loadMethod = ResourceLoadMethodStream;
         rcb.streamData = stream;
@@ -283,12 +311,15 @@ namespace APGE
        */
       void addResource(const ResourceID resourceID, std::shared_ptr<T> resource)
       {
-        typename std::map<ResourceID, ResourceControlBlock>::iterator iter = resources_.find(resourceID);
+        typename std::map<ResourceID, ResourceControlBlock>::iterator iter;
+        iter = resources_.find(resourceID);
         if(iter != resources_.end())
           {
-            LOGE("TResourceHandler<"<<typeid(T).name()<<">::addResource("<<resourceID<<",<RESOURCE>) - ID Already is already in use!");
+            LOGE("TResourceHandler<"<<typeid(T).name()<<">::addResource("
+                 <<resourceID<<",<RESOURCE>) - ID Already is already in use!");
             return;
           }
+
         ResourceControlBlock rcb;
         rcb.resource = resource;
         resources_.insert(std::pair<ResourceID,ResourceControlBlock>(resourceID,rcb));
@@ -302,59 +333,66 @@ namespace APGE
       std::shared_ptr<T> getResource(const ResourceID resourceID)
       {
         //Enforce unique resourceID
-        typename std::map<ResourceID, ResourceControlBlock>::iterator iter = resources_.find(resourceID);
+        typename std::map<ResourceID, ResourceControlBlock>::iterator iter;
+        iter = resources_.find(resourceID);
         if(iter == resources_.end())
           {
-            LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResource("<<resourceID<<") - ID is invalid");
+            LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResource("
+                 <<resourceID<<") - ID is invalid");
             return dummyResource_;
           }
 
         //If Resource already loaded, return the pointer
-        std::shared_ptr<T> ptrResource = iter->second.resource.lock();
-        if(ptrResource)
+        std::shared_ptr<T> resource = iter->second.resource.lock();
+        if(resource)
           {
-            return ptrResource;
+            return resource;
           }
 
         //If Resource not loaded yet, construct an object for it & load it in.
         bool isLoaded = false;
-        ptrResource = construct();
-        if(ptrResource)
+        resource = construct();
+        if(resource)
           {
+            LOGD("TResourceHandler<"<<typeid(T).name()<<">::getResource("
+                 <<resourceID<<") Loading resource");
             //Update weak reference
-            iter->second.resource = ptrResource;
+            iter->second.resource = resource;
 
             //Attempt to load the resource if construction successful
             switch (iter->second.loadMethod)
               {
               case ResourceLoadMethodFile:
-                isLoaded = loadResourceFromFile(*ptrResource,iter->second.fileName);
+                isLoaded = loadResourceFromFile(*resource,iter->second.fileName);
                 break;
               case ResourceLoadMethodMemory:
-                isLoaded = loadResourceFromMemory(*ptrResource,iter->second.memoryData);
+                isLoaded = loadResourceFromMemory(*resource,iter->second.memoryData);
                 break;
               case ResourceLoadMethodStream:
-                isLoaded = loadResourceFromStream(*ptrResource,iter->second.streamData);
+                isLoaded = loadResourceFromStream(*resource,iter->second.streamData);
                 break;
               default:
-                LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResource("<<resourceID<<") - Undefined resource loading method");
+                LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResource("
+                     <<resourceID<<") - Undefined resource loading method");
                 break;
               }
           }
         else
           {
             //Construction failed.
-            LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResource("<<resourceID<<") - Unable to construct resource");
+            LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResource("
+                 <<resourceID<<") - Unable to construct resource");
           }
 
         //If loading failed, return dummy resource, else return the resource.
         if(isLoaded)
           {
-            return ptrResource;
+            return resource;
           }
         else
           {
-            LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResource("<<resourceID<<") - Unable to load resource, falling back onto dummy resource.");
+            LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResource("
+                 <<resourceID<<") - Load failed, using dummy resource.");
             return dummyResource_;
           }
       }

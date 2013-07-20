@@ -9,15 +9,17 @@ namespace APGE
   namespace Resource
   {
     /**
-     * @brief The IResourceHandler class is an untemplated interface for a resource handler.
-     * When implementing resource handlers please extend TResourceHandler!
+     * @brief The IResourceHandler class is an untemplated interface
+     * for a resource handler. When implementing resource handlers
+     * please extend TResourceHandler!
      */
     class IResourceHandler : sf::NonCopyable
     {
     public:
 
       /**
-       * @brief IResourceHandler Construct resource handler with given id. This ID should be unique!
+       * @brief IResourceHandler Construct resource handler with given id.
+       * This ID should be unique!
        * @param handlerID
        */
       IResourceHandler(const ResourceHandlerID handlerID) : handlerID_(handlerID)
@@ -69,38 +71,43 @@ namespace APGE
       virtual IResourceFromStreamData getResourceStreamData(const ResourceID resourceID) const = 0;
 
       /**
-       * @brief setResourceFilename Sets the resource loading mode to a file based approach with a given filename.
+       * @brief setResourceFilename Sets the resource loading mode to a file
+       * based approach with a given filename.
        * @param resourceID the resource id to use
        * @param filename the filename to load from
        */
       virtual void setResourceFilename(const ResourceID resourceID, std::string filename) = 0;
 
       /**
-       * @brief setResourceMemoryData Sets the loading mode to memory based with a given memory data object
+       * @brief setResourceMemoryData Sets the loading mode to memory based
+       * with a given memory data object
        * @param resourceID
-       * @param memoryData the memory data object to use, remember to use the correct subclass of IResourceFromMemoryData!
+       * @param memoryData the memory data object to use.
        */
       virtual void setResourceMemoryData(const ResourceID resourceID, IResourceFromMemoryData memoryData) = 0;
 
       /**
-       * @brief setResourceStreamData Sets the loading mode to stream based with a given stream data object
+       * @brief setResourceStreamData Sets the loading mode to stream based
+       * with a given stream data object
        * @param resourceID
-       * @param streamData the stream data object to use, remember to use the correct subclass of IResourceFromStreamData!
+       * @param streamData the stream data object to use.
        */
       virtual void setResourceStreamData(const ResourceID resourceID, IResourceFromStreamData streamData)  = 0;
 
       /**
-       * @brief removeResource completely removes a resource from this handler. Note that the resource contents
-       *will not be unloaded until the last resource shared_pointer gets destructed, however, no new shared pointers by
-       *resource lookup using this class will be possible for the removed resource.
+       * @brief removeResource completely removes a resource from this handler.
+       * Note that the resource contents will not be unloaded until the last resource
+       * shared_pointer gets destructed, however, no new shared pointers by
+       * resource lookup using this class will be possible for the removed resource.
        * @param resourceID resource to remove
        */
       virtual void removeResource(const ResourceID resourceID) = 0;
 
       /**
-       * @brief removeAllResources completely removes all resources from this handler. Note that resources will
-       *not be unloaded until all shared pointer references are dropped. however, no new shared pointers by
-       *resource lookup using this class will be possible.
+       * @brief removeAllResources completely removes all resources from this handler.
+       * Note that resources will not be unloaded until all shared pointer references
+       * are dropped. however, no new shared pointers by
+       * resource lookup using this class will be possible.
        */
       virtual void removeAllResources() = 0;
 
@@ -117,6 +124,29 @@ namespace APGE
        * @return
        */
       virtual bool isResource(const ResourceID resourceID) const = 0;
+
+      /**
+       * @brief addResource Adds a resource with the given id as a from file resource.
+       * @param resourceID
+       * @param filename
+       */
+      virtual void addResource(const ResourceID resourceID, std::string filename) = 0;
+
+      /**
+       * @brief addResource Adds a resource with the given id as a from memory resource
+       * @param resourceID
+       * @param memory
+       */
+      virtual void addResource(const ResourceID resourceID, IResourceFromMemoryData memory) = 0;
+
+      /**
+       * @brief addResource Adds a resource with the given id as a from stream resource
+       * @param resourceID
+       * @param stream
+       */
+      virtual void addResource(const ResourceID resourceID, IResourceFromStreamData stream) = 0;
+
+
     private:
       ResourceHandlerID handlerID_;
 

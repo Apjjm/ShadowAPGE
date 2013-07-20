@@ -8,7 +8,8 @@ namespace APGE
 {
 
   /**
-  * @brief The Application class is a singleton which controls the windowing and events.
+  * @brief The Application class is a singleton.
+  * Application controls the windowing and events.
 */
   class Application : sf::NonCopyable
   {
@@ -81,6 +82,7 @@ namespace APGE
      * @return true if resource manager was configured successfully
      */
     bool configureResourceManager();
+
 
    private:
     static std::unique_ptr<Application> application_;

@@ -1,4 +1,5 @@
 #include "Application.hpp"
+#include "APGE/Core/Resource/IResourceHandler.hpp"
 #include "APGE/Core/Resource/TResourceHandler.hpp"
 #include "APGE/Core/Resource/TextureResourceHandler.hpp"
 
@@ -76,20 +77,20 @@ namespace APGE
       return Application::ExitResourceError;
 
     //Add a temp test resource
-    Resource::TResourceHandler<sf::Texture>& texHandler = getResourceManager()->getResourceHandler<sf::Texture>();
-    texHandler.addResource("TEST",directory_ + "/testImage.png");
-
+    std::shared_ptr<Resource::TResourceHandler<sf::Texture>> texHandler;
+    texHandler = getResourceManager()->getResourceHandler<sf::Texture>();
+    texHandler->addResource("TEST",directory_ + "/testImage.png");
     running_ = true;
 
     sf::RenderWindow window(sf::VideoMode(800, 600), "Test");
     //Get a texture resource
-    std::shared_ptr<sf::Texture> image = texHandler.getResource("TEST");
+    std::shared_ptr<sf::Texture> image = texHandler->getResource("TEST");
     sf::Sprite sprite(*image);
 
     // run the program as long as the window is open
     while (window.isOpen())
     {
-        // check all the window's events that were triggered since the last iteration of the loop
+        // check all the window's events that were triggered
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -102,7 +103,6 @@ namespace APGE
         window.display();
         sf::sleep(sf::microseconds(16666));
     }
-
 
     running_ = false;
 
@@ -117,16 +117,19 @@ namespace APGE
     using namespace Resource;
 
     //Create Resource Manager
-    resourceManager_.reset(new(std::nothrow) ResourceManager);
+    resourceManager_ = std::shared_ptr<ResourceManager>(
+                          new(std::nothrow)ResourceManager );
     if(!resourceManager_)
       {
-        LOGE("Application::configureResourceManager() - could not create resource manager.");
+        LOGE("Application::configureResourceManager() could not create resource manager.");
         return false;
       }
 
     //Add handlers
     bool result = true;
-    resourceManager_->registerHandler(new(std::nothrow) TextureResourceHandler);
+    result &= resourceManager_->registerHandler(std::shared_ptr<IResourceHandler>(
+                                                new(std::nothrow)TextureResourceHandler));
+
     return result;
   }
 }

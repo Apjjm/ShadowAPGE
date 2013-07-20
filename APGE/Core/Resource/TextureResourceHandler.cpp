@@ -5,14 +5,17 @@ namespace APGE
   {
 
     //Static Members
-    std::shared_ptr<sf::Texture> TextureResourceHandler::dummyTexture_(new(std::nothrow) sf::Texture);
+    std::shared_ptr<sf::Texture> TextureResourceHandler::dummyTexture_(
+        new(std::nothrow) sf::Texture);
 
     //Functions
-    TextureResourceHandler::TextureResourceHandler() : TResourceHandler<sf::Texture>(dummyTexture_)
+    TextureResourceHandler::TextureResourceHandler()
+      : TResourceHandler<sf::Texture>(dummyTexture_)
     {
     }
 
-    bool TextureResourceHandler::loadResourceFromFile(sf::Texture& resource, std::string filename)
+    bool TextureResourceHandler::loadResourceFromFile(
+        sf::Texture& resource, std::string filename)
     {
       bool result = false;
       //Check file exists
@@ -27,13 +30,15 @@ namespace APGE
       return result;
     }
 
-    bool TextureResourceHandler::loadResourceFromMemory(sf::Texture& resource, IResourceFromMemoryData memory)
+    bool TextureResourceHandler::loadResourceFromMemory(
+        sf::Texture& resource, IResourceFromMemoryData memory)
     {
       LOGE("TextureResourceHandler::loadResourceFromMemory() is not implemented yet");
       return false;
     }
 
-    bool TextureResourceHandler::loadResourceFromStream(sf::Texture& resource, IResourceFromStreamData stream)
+    bool TextureResourceHandler::loadResourceFromStream(
+        sf::Texture& resource, IResourceFromStreamData stream)
     {
       LOGE("TextureResourceHandler::loadResourceFromMemory() is not implemented yet");
       return false;
