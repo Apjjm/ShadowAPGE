@@ -1,8 +1,10 @@
 #include "Application.hpp"
+#include "APGE/Core/Resource/TResourceHandler.hpp"
+#include "APGE/Core/Resource/TextureResourceHandler.hpp"
 
 namespace APGE
 {
-  std::unique_ptr<Application> Application::application_ = std::unique_ptr<Application>();
+  std::unique_ptr<Application> Application::application_(nullptr);
 
   Application& Application::getApplication()
   {
@@ -69,11 +71,63 @@ namespace APGE
 
   Application::ExitCode Application::run()
   {
+    //Initilisation
+    if(!configureResourceManager())
+      return Application::ExitResourceError;
+
+    //Add a temp test resource
+    Resource::TResourceHandler<sf::Texture>& texHandler = getResourceManager()->getResourceHandler<sf::Texture>();
+    texHandler.addResource("TEST",directory_ + "/testImage.png");
+
     running_ = true;
-    /* TODO */
+
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Test");
+    //Get a texture resource
+    std::shared_ptr<sf::Texture> image = texHandler.getResource("TEST");
+    sf::Sprite sprite(*image);
+
+    // run the program as long as the window is open
+    while (window.isOpen())
+    {
+        // check all the window's events that were triggered since the last iteration of the loop
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // "close requested" event: we close the window
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        window.clear();
+        window.draw(sprite);
+        window.display();
+        sf::sleep(sf::microseconds(16666));
+    }
+
+
     running_ = false;
+
+    //Release the resource manager before exit
+    resourceManager_.reset();
     return Application::ExitSuccess;
   }
 
+  bool Application::configureResourceManager()
+  {
+    LOGI("---CREATING RESOURCE HANDLERS---");
+    using namespace Resource;
+
+    //Create Resource Manager
+    resourceManager_.reset(new(std::nothrow) ResourceManager);
+    if(!resourceManager_)
+      {
+        LOGE("Application::configureResourceManager() - could not create resource manager.");
+        return false;
+      }
+
+    //Add handlers
+    bool result = true;
+    resourceManager_->registerHandler(new(std::nothrow) TextureResourceHandler);
+    return result;
+  }
 }
 

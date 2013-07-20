@@ -172,7 +172,7 @@ namespace APGE
         if(iter == resources_.end())
           {
             LOGE("TResourceHandler<"<<typeid(T).name()<<">::removeResource("<<resourceID<<") - Invalid ID");
-            return IResourceFromStreamData();
+            return;
           }
         resources_.erase(iter++);
       }
@@ -233,11 +233,8 @@ namespace APGE
             return;
           }
         ResourceControlBlock rcb;
-        rcb.resource();
         rcb.loadMethod = ResourceLoadMethodFile;
         rcb.fileName = filename;
-        rcb.memoryData();
-        rcb.streamData();
         resources_.insert(std::pair<ResourceID,ResourceControlBlock>(resourceID,rcb));
       }
 
@@ -255,11 +252,8 @@ namespace APGE
             return;
           }
         ResourceControlBlock rcb;
-        rcb.resource();
         rcb.loadMethod = ResourceLoadMethodMemory;
-        rcb.fileName = "";
         rcb.memoryData = memory;
-        rcb.streamData();
         resources_.insert(std::pair<ResourceID,ResourceControlBlock>(resourceID,rcb));
       }
 
@@ -277,10 +271,7 @@ namespace APGE
             return;
           }
         ResourceControlBlock rcb;
-        rcb.resource();
         rcb.loadMethod = ResourceLoadMethodStream;
-        rcb.fileName = "";
-        rcb.memoryData();
         rcb.streamData = stream;
         resources_.insert(std::pair<ResourceID,ResourceControlBlock>(resourceID,rcb));
       }
@@ -299,11 +290,7 @@ namespace APGE
             return;
           }
         ResourceControlBlock rcb;
-        rcb.resource(resource);
-        rcb.loadMethod = ResourceLoadMethodUndefined;
-        rcb.fileName = "";
-        rcb.memoryData();
-        rcb.streamData();
+        rcb.resource = resource;
         resources_.insert(std::pair<ResourceID,ResourceControlBlock>(resourceID,rcb));
       }
 
@@ -316,7 +303,7 @@ namespace APGE
       {
         //Enforce unique resourceID
         typename std::map<ResourceID, ResourceControlBlock>::iterator iter = resources_.find(resourceID);
-        if(iter != resources_.end())
+        if(iter == resources_.end())
           {
             LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResource("<<resourceID<<") - ID is invalid");
             return dummyResource_;
@@ -428,6 +415,16 @@ namespace APGE
         std::string fileName; //Filename for from file
         IResourceFromMemoryData memoryData; //for from memory
         IResourceFromStreamData streamData; //for from stream
+
+        ResourceControlBlock()
+          : resource(),
+            loadMethod(ResourceLoadMethodUndefined),
+            fileName(""),
+            memoryData(),
+            streamData()
+        {
+        }
+
       };
       std::map<ResourceID, ResourceControlBlock> resources_;
       std::shared_ptr<T> dummyResource_;

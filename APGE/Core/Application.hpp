@@ -1,6 +1,8 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 #include "CoreTypes.hpp"
+#include "Resource/TResourceHandler.hpp"
+#include "Resource/ResourceManager.hpp"
 
 namespace APGE
 {
@@ -23,9 +25,9 @@ namespace APGE
       ExitSuccess = EXIT_SUCCESS,   //no errors
       ExitImmidiate = EXIT_FAILURE, //flat exit call
       ExitGeneralErrorAndFree = 2,  //Exit but try to free resources
-      ExitResourceErrorAndFree = 3, //Exit but try to free resources
-      ExitGraphicsErrorAndFree = 4, //Exit but try to free resources
-      ExitInvalidCommandLine = 5    //Exit but try to free resources
+      ExitResourceError = 3,
+      ExitGraphicsError = 4,
+      ExitInvalidCommandLine = 5
     };
 
     /**
@@ -63,11 +65,33 @@ namespace APGE
       return running_;
     }
 
-  private:
+    /**
+     * @brief getResourceManager
+     * @return shared pointer to resource manager
+     */
+    inline std::shared_ptr<Resource::ResourceManager> getResourceManager() const
+    {
+      return resourceManager_;
+    }
+
+   protected:
+
+    /**
+     * @brief configureResourceManager - Called by run ONCE to initilise the resource manager.
+     * @return true if resource manager was configured successfully
+     */
+    bool configureResourceManager();
+
+   private:
     static std::unique_ptr<Application> application_;
+
     bool running_;
     std::string directory_;
+    std::shared_ptr<Resource::ResourceManager> resourceManager_;
 
+    /**
+     * @brief Application - Hidden constructor for singleton pattern.
+     */
     Application();
   };
 }
