@@ -10,7 +10,6 @@ namespace APGE
     public:
       IMessageArguments(MessageArgumentsType argType) : argType_(argType)
       {
-
       }
 
       inline MessageArgumentsType getMessageArgumentsType()
