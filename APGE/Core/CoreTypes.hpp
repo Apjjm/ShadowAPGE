@@ -9,6 +9,7 @@
 
 //Boost
 #include "boost/filesystem.hpp"
+#include "boost/signals2.hpp"
 
 //SFML
 #include "SFML_INCLUDES.hpp"
@@ -57,8 +58,46 @@ namespace APGE
     };
 
   }
+
+  namespace Component
+  {
+    /**
+     * @brief ComponentID - Type for lookup of componenets
+     */
+    typedef std::string ComponentType;
+
+    /**
+     * @brief ComponentHandlerID - Type for lookup of component handlers
+     */
+    typedef APGE::Resource::ResourceHandlerID ComponentHandlerID;
+
+    class IComponent;
+    class PositionComponent;
+    class SpriteComponent;
+  }
+
+  namespace Entity
+  {
+
+    typedef std::string EntityID;
+
+    class Entity;
+  }
+
+  namespace Messaging
+  {
+    class IMessageArguments;
+    class ISubscriber;
+    class IPublisher;
+
+    enum MessageArgumentsType
+    {
+      MessageArgumentsTypeUnknown = 0
+    };
+  }
 }
 
+//Forward Declarations
 
 
 #endif // CORETYPES_HPP

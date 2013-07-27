@@ -9,7 +9,6 @@ namespace APGE
 {
   namespace Resource
   {
-    template<class T>
     /**
      * @brief The TResourceHandler class should be extended by a new class for
      * each resource type one wishes to handle. Each child class should pass
@@ -18,7 +17,7 @@ namespace APGE
      * freed when no longer in use. To ensure resources persist through a level
      * or the application lifetime, keep a list of loaded resources elsewhere (e.g. in level).
      */
-    class TResourceHandler : public IResourceHandler
+    template<class T> class TResourceHandler : public IResourceHandler
     {
     public:
 
@@ -322,7 +321,28 @@ namespace APGE
 
         ResourceControlBlock rcb;
         rcb.resource = resource;
+        rcb.loadMethod = ResourceLoadMethodUndefined;
         resources_.insert(std::pair<ResourceID,ResourceControlBlock>(resourceID,rcb));
+      }
+
+      /**
+       * @brief addResource Adds a resource with no loading method specified.
+       * @param resourceID
+       */
+      void addResource(const ResourceID resourceID)
+      {
+        typename std::map<ResourceID, ResourceControlBlock>::iterator iter;
+        iter = resources_.find(resourceID);
+        if(iter != resources_.end())
+          {
+            LOGE("TResourceHandler<"<<typeid(T).name()<<">::addResource("
+                 <<resourceID<<") - ID Already is already in use!");
+            return;
+          }
+        ResourceControlBlock rcb;
+        rcb.loadMethod = ResourceLoadMethodUndefined;
+        resources_.insert(std::pair<ResourceID,ResourceControlBlock>(resourceID,rcb));
+
       }
 
       /**
@@ -371,9 +391,13 @@ namespace APGE
               case ResourceLoadMethodStream:
                 isLoaded = loadResourceFromStream(*resource,iter->second.streamData);
                 break;
+              case ResourceLoadMethodUndefined:
+                /* No Loading Method */
+                isLoaded = true;
+                break;
               default:
                 LOGE("TResourceHandler<"<<typeid(T).name()<<">::getResource("
-                     <<resourceID<<") - Undefined resource loading method");
+                     <<resourceID<<") - Unknown resource loading method");
                 break;
               }
           }
@@ -426,7 +450,13 @@ namespace APGE
        * @param filename
        * @return true if loading was sucessfull
        */
-      virtual bool loadResourceFromFile(T& resource, std::string filename) = 0;
+      virtual bool loadResourceFromFile(T& resource, std::string filename)
+      {
+        LOGE("TResourceHandler::loadResourceFromFile("
+             <<"RES("<<typeid(T).name()<<"@"<<static_cast<void*>(&resource)
+             <<"),FILE("<<filename<<")) is not implemented.");
+       return false;
+      }
 
       /**
        * @brief loadResourceFromMemory load a given resource from memory
@@ -434,7 +464,13 @@ namespace APGE
        * @param memory
        * @return true if loading was sucessfull
        */
-      virtual bool loadResourceFromMemory(T& resource, IResourceFromMemoryData memory) = 0;
+      virtual bool loadResourceFromMemory(T& resource, IResourceFromMemoryData memory)
+      {
+        LOGE("TResourceHandler::loadResourceFromMemory("
+             <<"RES("<<typeid(T).name()<<"@"<<static_cast<void*>(&resource)
+             <<"),MEM(size="<<memory.getRawDataLength()<<")) is not implemented.");
+       return false;
+      }
 
       /**
        * @brief loadResourceFromStream load a given resource from a stream
@@ -442,7 +478,13 @@ namespace APGE
        * @param stream
        * @return true if loading was sucessfull
        */
-      virtual bool loadResourceFromStream(T& resource, IResourceFromStreamData stream) = 0;
+      virtual bool loadResourceFromStream(T& resource, IResourceFromStreamData stream)
+      {
+        LOGE("TResourceHandler::loadResourceFromStream("
+             <<"RES("<<typeid(T).name()<<"@"<<static_cast<void*>(&resource)
+             <<"),STR(size="<<stream.getStreamPointer()->getSize()<<")) is not implemented.");
+        return false;
+      }
 
     private:
 

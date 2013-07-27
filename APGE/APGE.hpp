@@ -14,7 +14,18 @@
 #include "Core/Resource/ResourceManager.hpp"
 
 //Specific resource handlers
+#include "Core/Resource/TextureResourceHandler.hpp"
 
+//Messaging
+#include "Core/Messaging/IMessageArguments.hpp"
+#include "Core/Messaging/ISubscriber.hpp"
+#include "Core/Messaging/IPublisher.hpp"
 
+//Components
+#include "Core/Component/IComponent.hpp"
+#include "Core/Component/TComponentHandler.hpp"
+
+//Entity
+#include "Core/Entity/Entity.hpp"
 
 #endif // APGE_HPP

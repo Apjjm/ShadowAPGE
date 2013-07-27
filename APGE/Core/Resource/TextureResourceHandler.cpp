@@ -14,8 +14,7 @@ namespace APGE
     {
     }
 
-    bool TextureResourceHandler::loadResourceFromFile(
-        sf::Texture& resource, std::string filename)
+    bool TextureResourceHandler::loadResourceFromFile(sf::Texture& resource, std::string filename)
     {
       bool result = false;
       //Check file exists
@@ -29,20 +28,5 @@ namespace APGE
         }
       return result;
     }
-
-    bool TextureResourceHandler::loadResourceFromMemory(
-        sf::Texture& resource, IResourceFromMemoryData memory)
-    {
-      LOGE("TextureResourceHandler::loadResourceFromMemory() is not implemented yet");
-      return false;
-    }
-
-    bool TextureResourceHandler::loadResourceFromStream(
-        sf::Texture& resource, IResourceFromStreamData stream)
-    {
-      LOGE("TextureResourceHandler::loadResourceFromMemory() is not implemented yet");
-      return false;
-    }
-
   }
 }

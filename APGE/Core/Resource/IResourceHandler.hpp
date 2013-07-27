@@ -146,6 +146,11 @@ namespace APGE
        */
       virtual void addResource(const ResourceID resourceID, IResourceFromStreamData stream) = 0;
 
+      /**
+       * @brief addResource Add a resource with no specified loading method
+       * @param resourceID
+       */
+      virtual void addResource(const ResourceID resourceID) = 0;
 
     private:
       ResourceHandlerID handlerID_;

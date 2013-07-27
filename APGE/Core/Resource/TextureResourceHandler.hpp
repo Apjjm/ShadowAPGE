@@ -22,21 +22,8 @@ namespace APGE
        */
       virtual bool loadResourceFromFile(sf::Texture& resource, std::string filename);
 
-      /**
-       * @brief loadResourceFromMemory load a given resource from memory
-       * @param resource
-       * @param memory
-       * @return true if loading was sucessfull
-       */
-      virtual bool loadResourceFromMemory(sf::Texture& resource, IResourceFromMemoryData memory);
-
-      /**
-       * @brief loadResourceFromStream load a given resource from a stream
-       * @param resource
-       * @param stream
-       * @return true if loading was sucessfull
-       */
-      virtual bool loadResourceFromStream(sf::Texture& resource, IResourceFromStreamData stream);
+      //TODO: virtual bool loadResourceFromMemory(sf::Texture& resource, IResourceFromMemoryData memory);
+      //TODO: virtual bool loadResourceFromStream(sf::Texture& resource, IResourceFromStreamData stream);
 
     private:
       static std::shared_ptr<sf::Texture> dummyTexture_;

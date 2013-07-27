@@ -2,6 +2,9 @@
 #include "APGE/Core/Resource/IResourceHandler.hpp"
 #include "APGE/Core/Resource/TResourceHandler.hpp"
 #include "APGE/Core/Resource/TextureResourceHandler.hpp"
+#include "APGE/Core/Entity/Entity.hpp"
+#include "APGE/Core/Component/PositionComponent.hpp"
+#include "APGE/Core/Component/SpriteComponent.hpp"
 
 namespace APGE
 {
@@ -76,36 +79,9 @@ namespace APGE
     if(!configureResourceManager())
       return Application::ExitResourceError;
 
-    //Add a temp test resource
-    std::shared_ptr<Resource::TResourceHandler<sf::Texture>> texHandler;
-    texHandler = getResourceManager()->getResourceHandler<sf::Texture>();
-    texHandler->addResource("TEST",directory_ + "/testImage.png");
-    running_ = true;
-
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Test");
-    //Get a texture resource
-    std::shared_ptr<sf::Texture> image = texHandler->getResource("TEST");
-    sf::Sprite sprite(*image);
-
-    // run the program as long as the window is open
-    while (window.isOpen())
-    {
-        // check all the window's events that were triggered
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            // "close requested" event: we close the window
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-        window.clear();
-        window.draw(sprite);
-        window.display();
-        sf::sleep(sf::microseconds(16666));
-    }
-
-    running_ = false;
-
+    LOGI("---START MAIN LOOP---");
+    testRoutine();
+    LOGI("---END MAIN LOOP---");
     //Release the resource manager before exit
     resourceManager_.reset();
     return Application::ExitSuccess;
@@ -131,6 +107,59 @@ namespace APGE
                                                 new(std::nothrow)TextureResourceHandler));
 
     return result;
+  }
+
+  void Application::testRoutine()
+  {
+    //Config component mgr
+    componentManager_ = std::shared_ptr<Resource::ResourceManager>
+        (new(std::nothrow)Resource::ResourceManager());
+
+    Component::TComponentHandler<Component::PositionComponent>* t =
+        (new(std::nothrow) Component::TComponentHandler<Component::PositionComponent>);
+
+    componentManager_->registerHandler(std::shared_ptr<Component::TComponentHandler<Component::PositionComponent>>(t));
+
+    componentManager_->registerHandler(std::shared_ptr<Component::TComponentHandler<Component::SpriteComponent>>
+                                       (new(std::nothrow) Component::TComponentHandler<Component::SpriteComponent>));
+    running_ = true;
+
+    //Add a temp test resource
+    std::shared_ptr<Resource::TResourceHandler<sf::Texture>> texHandler;
+    texHandler = getResourceManager()->getResourceHandler<sf::Texture>();
+    texHandler->addResource("TEST",directory_ + "/testImage.png");
+
+    //Create a test entity
+    Entity::Entity ent("TestEntity");
+    ent.addComponent<Component::PositionComponent>();
+    ent.addComponent<Component::SpriteComponent>();
+
+    //Configure Components
+    ent.getComponent<Component::SpriteComponent>()->addFrame(texHandler->getResource("TEST"));
+    ent.getComponent<Component::PositionComponent>()->setPosition(sf::Vector2f(10,10));
+
+    //Create Window
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Test");
+
+    // run the program as long as the window is open
+    while (window.isOpen())
+    {
+        // check all the window's events that were triggered
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // "close requested" event: we close the window
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        ent.getComponent<Component::SpriteComponent>()->update(0.1f);
+        window.clear();
+        window.draw(ent.getComponent<Component::SpriteComponent>()->getSprite());
+        window.display();
+        sf::sleep(sf::microseconds(16666));
+    }
+
+    running_ = false;
   }
 }
 

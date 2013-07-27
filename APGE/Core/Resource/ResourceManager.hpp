@@ -26,7 +26,7 @@ namespace APGE
        */
       bool registerHandler(std::shared_ptr<IResourceHandler> handler)
       {
-        if(handler == 0)
+        if(!handler)
           {
             LOGE("ResourceManager::registerHandler() - Handler was not constructed / invalid pointer.");
             return false;
@@ -34,7 +34,7 @@ namespace APGE
         ResourceHandlerID handlerID = handler->getHandlerID();
 
         //Check to see if resource handler is already registered
-        std::map<const ResourceHandlerID, std::shared_ptr<IResourceHandler>>::const_iterator iter;
+        std::map<ResourceHandlerID, std::shared_ptr<IResourceHandler>>::const_iterator iter;
         iter = handlers_.find(handlerID);
         if(iter != handlers_.end())
           {
@@ -43,7 +43,7 @@ namespace APGE
           }
 
         //Add the handler
-        handlers_.insert(std::pair<const ResourceHandlerID,std::shared_ptr<IResourceHandler>>(
+        handlers_.insert(std::pair<ResourceHandlerID,std::shared_ptr<IResourceHandler>>(
                            handlerID,handler ));
         return true;
       }
@@ -53,7 +53,7 @@ namespace APGE
        * @param handlerID - Unique Handler ID of the resource handler.
        * @return a shared_pointer to the resource handler.
        */
-      std::shared_ptr<IResourceHandler> getResourceHandler(const ResourceHandlerID handlerID) const
+      std::shared_ptr<IResourceHandler> getResourceHandler(ResourceHandlerID handlerID) const
       {
         //Find the handler
         std::map<const ResourceHandlerID, std::shared_ptr<IResourceHandler> >::const_iterator iter;
@@ -81,7 +81,7 @@ namespace APGE
       }
 
     private:
-      std::map<const ResourceHandlerID, std::shared_ptr<IResourceHandler> > handlers_;
+      std::map<ResourceHandlerID, std::shared_ptr<IResourceHandler> > handlers_;
 
 
     };

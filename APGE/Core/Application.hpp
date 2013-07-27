@@ -75,6 +75,10 @@ namespace APGE
       return resourceManager_;
     }
 
+    inline std::shared_ptr<Resource::ResourceManager> getComponentManager() const
+    {
+      return componentManager_;
+    }
    protected:
 
     /**
@@ -90,6 +94,10 @@ namespace APGE
     bool running_;
     std::string directory_;
     std::shared_ptr<Resource::ResourceManager> resourceManager_;
+    std::shared_ptr<Resource::ResourceManager> componentManager_;
+
+
+    void testRoutine();
 
     /**
      * @brief Application - Hidden constructor for singleton pattern.
