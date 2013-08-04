@@ -5,6 +5,7 @@
 #include "APGE/Core/Entity/Entity.hpp"
 #include "APGE/Core/Component/PositionComponent.hpp"
 #include "APGE/Core/Component/SpriteComponent.hpp"
+#include "APGE/Core/Script/LuaState.hpp"
 
 namespace APGE
 {
@@ -111,6 +112,22 @@ namespace APGE
 
   void Application::testRoutine()
   {
+
+    //lua test
+    APGE::Script::LuaState* l = new APGE::Script::LuaState();
+    l->openLibs();
+
+    if(!l->loadFile(directory_+"/test.txt"))
+      LOGE(l->getErrors());
+
+    l->clearErrors();
+
+    if(!l->run())
+      LOGE(l->getErrors());
+
+    delete l;
+    LOGI("========================");
+
     //Config component mgr
     componentManager_ = std::shared_ptr<Resource::ResourceManager>
         (new(std::nothrow)Resource::ResourceManager());

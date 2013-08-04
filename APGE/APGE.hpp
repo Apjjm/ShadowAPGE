@@ -28,4 +28,7 @@
 //Entity
 #include "Core/Entity/Entity.hpp"
 
+//Scripting
+#include "APGE/Core/Script/LuaState.hpp"
+
 #endif // APGE_HPP

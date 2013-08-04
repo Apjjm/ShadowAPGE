@@ -9,11 +9,10 @@
 
 //Boost
 #include "boost/filesystem.hpp"
-#include "boost/signals2.hpp"
+//#include "boost/signals2.hpp"
 
 //SFML
 #include "SFML_INCLUDES.hpp"
-
 
 //LOGGING MACROS
 #ifndef DEBUG_LOG
@@ -94,6 +93,11 @@ namespace APGE
     {
       MessageArgumentsTypeUnknown = 0
     };
+  }
+
+  namespace Script
+  {
+    class LuaState;
   }
 }
 
