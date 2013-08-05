@@ -10,7 +10,7 @@ namespace APGE
 {
   namespace Entity
   {
-    class Entity : sf::NonCopyable
+    class Entity : boost::noncopyable
     {
     public:
       Entity(EntityID id);

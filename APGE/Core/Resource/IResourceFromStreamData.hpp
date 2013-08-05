@@ -1,6 +1,7 @@
 #ifndef IRESOURCEFROMSTREAMDATA_HPP
 #define IRESOURCEFROMSTREAMDATA_HPP
 #include "APGE/Core/CoreTypes.hpp"
+#include "SFML_INCLUDES.hpp"
 
 namespace APGE
 {

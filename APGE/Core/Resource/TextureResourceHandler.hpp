@@ -1,7 +1,9 @@
 #ifndef TEXTURERESOURCEHANDLER_HPP
 #define TEXTURERESOURCEHANDLER_HPP
 #include "APGE/Core/CoreTypes.hpp"
+#include "SFML_INCLUDES.hpp"
 #include "TResourceHandler.hpp"
+
 
 namespace APGE
 {

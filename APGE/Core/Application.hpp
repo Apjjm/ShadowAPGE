@@ -1,8 +1,11 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 #include "CoreTypes.hpp"
+#include "boost/filesystem.hpp"
+#include "SFML_INCLUDES.hpp"
 #include "Resource/TResourceHandler.hpp"
 #include "Resource/ResourceManager.hpp"
+
 
 namespace APGE
 {
@@ -11,7 +14,7 @@ namespace APGE
   * @brief The Application class is a singleton.
   * Application controls the windowing and events.
 */
-  class Application : sf::NonCopyable
+  class Application : boost::noncopyable
   {
 
   public:

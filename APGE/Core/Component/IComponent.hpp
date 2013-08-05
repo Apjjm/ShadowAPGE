@@ -6,7 +6,7 @@ namespace APGE
 {  
   namespace Component
   {
-    class IComponent : sf::NonCopyable
+    class IComponent : boost::noncopyable
     {
     public:
       /**

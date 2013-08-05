@@ -8,7 +8,7 @@ namespace APGE
 {
   namespace Resource
   {
-    class ResourceManager : sf::NonCopyable
+    class ResourceManager : boost::noncopyable
     {
     public:
       ResourceManager()

@@ -1,4 +1,6 @@
 #include "TextureResourceHandler.hpp"
+#include "Boost/filesystem.hpp"
+
 namespace APGE
 {
   namespace Resource

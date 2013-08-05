@@ -1,6 +1,7 @@
 #ifndef POSITIONCOMPONENT_HPP
 #define POSITIONCOMPONENT_HPP
 #include "APGE/Core/CoreTypes.hpp"
+#include "SFML_INCLUDES.hpp"
 #include "IComponent.hpp"
 
 namespace APGE

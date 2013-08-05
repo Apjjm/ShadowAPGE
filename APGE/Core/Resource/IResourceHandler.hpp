@@ -13,7 +13,7 @@ namespace APGE
      * for a resource handler. When implementing resource handlers
      * please extend TResourceHandler!
      */
-    class IResourceHandler : sf::NonCopyable
+    class IResourceHandler : boost::noncopyable
     {
     public:
 

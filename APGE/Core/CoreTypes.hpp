@@ -5,14 +5,11 @@
 #include <memory>
 #include <iostream>
 #include <ostream>
+#include <vector>
 #include "assert.h"
 
 //Boost
-#include "boost/filesystem.hpp"
-//#include "boost/signals2.hpp"
-
-//SFML
-#include "SFML_INCLUDES.hpp"
+#include "boost/noncopyable.hpp"
 
 //LOGGING MACROS
 #ifndef DEBUG_LOG

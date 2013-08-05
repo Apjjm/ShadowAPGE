@@ -7,7 +7,7 @@ namespace APGE
 {
   namespace Script
   {
-    class LuaState : sf::NonCopyable
+    class LuaState : boost::noncopyable
     {
     public:
       LuaState();
