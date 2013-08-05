@@ -1,6 +1,7 @@
 #ifndef LUASTATE_HPP
 #define LUASTATE_HPP
 #include "APGE/Core/CoreTypes.hpp"
+#include "LuaNil.hpp"
 #include "lua.hpp"
 
 namespace APGE
@@ -19,14 +20,17 @@ namespace APGE
        * @param fileName
        * @return
        */
-      bool loadFile(const std::string fileName);
+      bool loadFile(const std::string& fileName);
 
       /**
        * @brief registerFunction
        * @param name
        * @param func
        */
-      void registerFunction(const std::string name, lua_CFunction func);
+      inline void registerFunction(const std::string& name, lua_CFunction func)
+      {
+        lua_register(mLuaState_,name.c_str(),func);
+      }
 
       /**
        * @brief run - Call this before calling callFunction
@@ -34,63 +38,87 @@ namespace APGE
        */
       bool run();
 
-      /**
-       * @brief callFunction call run() First!!
-       * @param name
-       * @param nArgs
-       * @param nResults
-       * @return
-       */
-      bool callFunction(std::string name, int nArgs=0, int nResults=0);
+      bool callFunction(const std::string& name, int nResults)
+      {
+        lua_getglobal(mLuaState_, name.c_str());
+        if(lua_pcall(mLuaState_,0,nResults,0))
+          {
+            postErrors();
+            return false;
+          }
+        else
+          {
+            return true;
+          }
+      }
+
+      template<typename T>
+      bool callFunction(const std::string& name, int nResults, const T& head)
+      {
+        lua_getglobal(mLuaState_, name.c_str());
+        push(head);
+        if(lua_pcall(mLuaState_,1,nResults,0))
+          {
+            postErrors();
+            return false;
+          }
+        else
+          {
+            return true;
+          }
+      }
+
+      template<typename T, typename... U>
+      bool callFunction(const std::string& name, int nResults, const T& head, const U&... tail)
+      {
+        lua_getglobal(mLuaState_, name.c_str());
+        push(head);
+        return callFunctionRecurse(nResults,1,tail...);
+      }
 
       inline void pop(const int amt)
       {
         lua_pop(mLuaState_,amt);
       }
 
-      inline void pushInt(const int arg)
+      inline void push(const int arg)
       {
         lua_pushinteger(mLuaState_,arg);
       }
 
-      inline void pushString(const std::string arg)
+      inline void push(const std::string arg)
       {
         lua_pushstring(mLuaState_,arg.c_str());
       }
 
-      inline void pushString(const char* arg)
+      inline void push(const char* arg)
       {
         lua_pushstring(mLuaState_,arg);
       }
 
-      inline void pushNumber(const float arg)
+      inline void push(const float arg)
       {
         lua_pushnumber(mLuaState_,arg);
       }
 
-      inline void pushNumber(const double arg)
+      inline void push(const double arg)
       {
         lua_pushnumber(mLuaState_,arg);
       }
 
-      inline void pushNil()
+      inline void push(const LuaNil /*unused*/)
       {
         lua_pushnil(mLuaState_);
       }
 
-      inline void pushBool(const bool arg)
+      inline void push(const bool arg)
       {
         lua_pushboolean(mLuaState_,arg);
       }
 
-      inline void pushUInt(const unsigned int arg)
+      inline void push(const unsigned int arg)
       {
         lua_pushunsigned(mLuaState_,arg);
-      }
-
-      inline void pushFunction(const lua_CFunction arg)
-      {
-        lua_pushcfunction(mLuaState_,arg);
       }
 
       inline bool isNumber(const int index) const
@@ -237,8 +265,33 @@ namespace APGE
 
       inline void postErrors()
       {
-        std::string errs = lua_tostring(mLuaState_,-1);
-        errors_.append(errs).append("\r\n");
+        const char* errstring = lua_tostring(mLuaState_,-1);
+        if(errstring)
+          {
+            errors_.append(errstring).append("\r\n");
+          }
+      }
+
+      template<typename T>
+      __alwaysinline bool callFunctionRecurse(int nResults, int nArgs, const T& head)
+      {
+        push(head);
+        if(lua_pcall(mLuaState_,nArgs+1,nResults,0))
+          {
+            postErrors();
+            return false;
+          }
+        else
+          {
+            return true;
+          }
+      }
+
+      template<typename T, typename... U>
+      __alwaysinline bool callFunctionRecurse(int nResults, int nArgs, const T& head, const U&... tail)
+      {
+        push(head);
+        return callFunctionRecurse(nResults,nArgs+1, tail...);
       }
 
       lua_State *mLuaState_;

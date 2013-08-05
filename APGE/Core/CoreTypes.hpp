@@ -11,20 +11,8 @@
 //Boost
 #include "boost/noncopyable.hpp"
 
-//LOGGING MACROS
-#ifndef DEBUG_LOG
-#define LOGD(x) do { APGE::Logger::info()<<"D:"<<x<<std::endl; } while(false)
-#else
-#define LOGD(x)
-#endif
-
-#define LOGI(x) do { APGE::Logger::info()<<"I:"<<x<<std::endl; } while(false)
-#define LOGW(x) do { APGE::Logger::warn()<<"W:"<<x<<std::endl; } while(false)
-#define LOGE(x) do { APGE::Logger::error()<<"E:"<<x<<std::endl; } while(false)
-#define FATAL(x) do { APGE::Logger::error()<<"FATAL: "<<x<<std::endl; APGE::Application::getApplication().abort(EXIT_FAILURE); } while(false)
-#define FATALC(x,y) do { APGE::Logger::error()<<"FATAL: "<<x<<std::endl; APGE::Application::getApplication().abort(y); } while(false)
-#include "Logger.hpp"
-
+//Helper Macros
+#include "HelperMacros.hpp"
 
 //Asset core types
 namespace APGE

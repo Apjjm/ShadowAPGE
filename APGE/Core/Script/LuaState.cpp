@@ -30,7 +30,7 @@ namespace APGE
         }
     }
 
-    bool LuaState::loadFile(const std::string fileName)
+    bool LuaState::loadFile(const std::string& fileName)
     {
       int status = luaL_loadfile(mLuaState_,fileName.c_str());
       if(status == 0)
@@ -46,11 +46,6 @@ namespace APGE
         }
     }
 
-    void LuaState::registerFunction(const std::string name, lua_CFunction func)
-    {
-      lua_register(mLuaState_,name.c_str(),func);
-    }
-
     bool LuaState::run()
     {
       int state = lua_pcall(mLuaState_,0,0,0);
@@ -64,21 +59,6 @@ namespace APGE
           return false;
         }
 
-    }
-
-    bool LuaState::callFunction(const std::string name, int nArgs, int nResults)
-    {
-      lua_getglobal(mLuaState_,name.c_str());
-      int state = lua_pcall(mLuaState_,nArgs,nResults,0);
-      if(state == 0)
-        {
-          return true;
-        }
-      else
-        {
-          postErrors();
-          return false;
-        }
     }
   }
 }

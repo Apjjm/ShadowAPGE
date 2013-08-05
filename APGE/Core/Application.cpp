@@ -117,13 +117,22 @@ namespace APGE
     APGE::Script::LuaState* l = new APGE::Script::LuaState();
     l->openLibs();
 
-    if(!l->loadFile(directory_+"/test.txt"))
-      LOGE(l->getErrors());
-
+    l->loadFile(directory_+"/test.txt");
+    LOGD(l->getErrors());
     l->clearErrors();
 
-    if(!l->run())
-      LOGE(l->getErrors());
+    l->run();
+    LOGD(l->getErrors());
+    l->clearErrors();
+
+    //Call functions
+    l->callFunction("testRoutine1",0,"tr1");
+    l->callFunction("testRoutine2",0,"tr2",1,2.123f);
+    LOGD(l->getErrors());
+    l->clearErrors();
+    //l->pushString("\"some test text\"");
+    //if(!l->callFunction("testRoutine",1,0))
+    //
 
     delete l;
     LOGI("========================");
